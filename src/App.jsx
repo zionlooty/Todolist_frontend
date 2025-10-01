@@ -1,0 +1,68 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import Loginpage from "./pages/Loginpage"
+import Signuppage from "./pages/Signuppage"
+import Dashboard from "./pages/Dashboard"
+import Mainlayout from "./layout/Mainlayout"
+import TaskPage from "./pages/TaskPage"
+import TodayPage from "./pages/TodayPage"
+import UpcomingPage from "./pages/UpcomingPage"
+import { TaskProvider } from "./context/TaskContext"
+
+
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem("token")
+  return token ? children : <Navigate to="/login" replace />
+}
+
+
+const LoginAuth = ({ children }) => {
+  const token = localStorage.getItem("token")
+  return !token ? children : <Navigate to="/" replace />
+}
+
+function App() {
+  return (
+    <TaskProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Auth routes */}
+          <Route
+            path="/login"
+            element={
+              <LoginAuth>
+                <Loginpage />
+              </LoginAuth>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <LoginAuth>
+                <Signuppage />
+              </LoginAuth>
+            }
+          />
+
+          {/* Protected routes with layout */}
+          <Route
+            element={
+              <ProtectedRoute>
+                <Mainlayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/tasks" element={<TaskPage />} />
+            <Route path="/today" element={<TodayPage />} />
+            <Route path="/upcoming" element={<UpcomingPage />} />
+          </Route>
+
+          {/* Catch-all → redirect invalid routes to login */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </TaskProvider>
+  )
+}
+
+export default App
