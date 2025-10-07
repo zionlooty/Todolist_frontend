@@ -1,68 +1,78 @@
-import React, { useContext, useState } from "react"
-  
-import AddTaskModal from "../components/AddTaskModal"
-import { TaskContext } from "../context/TaskContext"
+import React, { useContext, useState } from "react";
+import { TaskContext } from "../context/TaskContext";
+import AddTaskModal from "../components/AddTaskModal";
+import { FaPlus, FaCalendarAlt, FaTag, FaBolt, FaCheckCircle } from "react-icons/fa";
 
 const UpcomingPage = () => {
-  const { tasks, setTasks } = useContext(TaskContext)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const { tasks, addTask, loading } = useContext(TaskContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // today’s date
-  const today = new Date().toISOString().split("T")[0]
+  const today = new Date().toISOString().split("T")[0];
 
-  // filter only upcoming tasks
-  const upcomingTasks = tasks.filter((task) => task.dueDate > today)
+  const normalizeDate = (dateString) =>
+    dateString ? (dateString.includes("T") ? dateString.split("T")[0] : dateString) : null;
 
-  // add new task (shared state, visible everywhere)
-  const handleAddTask = (taskData) => {
-    const newTask = { id: Date.now(), status: "pending", ...taskData }
-    setTasks((prev) => [...prev, newTask])
-  }
+  const upcomingTasks = tasks.filter(
+    (task) => normalizeDate(task.due_date) > today
+  );
 
   return (
-    <div className="flex justify-center mt-10">
-      <div className="bg-white shadow-lg rounded-xl w-[600px] p-8">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold">Upcoming Tasks</h1>
-          <p className="text-gray-500 text-sm">
-            Plan ahead with your upcoming tasks
-          </p>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold text-gray-800">Upcoming Tasks</h1>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700"
+          >
+            <FaPlus /> Add Task
+          </button>
         </div>
 
-        {upcomingTasks.length === 0 ? (
-          <div className="flex flex-col items-center text-center">
-            <p className="text-gray-600 mb-6">
-              No upcoming tasks. Consider planning ahead!
-            </p>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
-            >
-              + Add Task
-            </button>
-          </div>
+        {loading ? (
+          <p className="text-center text-gray-500">Loading...</p>
+        ) : upcomingTasks.length === 0 ? (
+          <p className="text-center text-gray-600">✨ No upcoming tasks found!</p>
         ) : (
-          <ul className="space-y-4">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {upcomingTasks.map((task) => (
-              <li key={task.id} className="border p-4 rounded-lg shadow">
-                <h3 className="font-semibold">{task.title}</h3>
+              <div
+                key={task.task_id}
+                className="bg-white p-6 rounded-xl shadow hover:shadow-md transition"
+              >
+                <h3 className="font-semibold text-lg">{task.title}</h3>
                 <p className="text-sm text-gray-600">{task.description}</p>
-                <p className="text-sm">📅 {task.dueDate}</p>
-                <p className="text-sm">🏷️ {task.category}</p>
-                <p className="text-sm">⚡ {task.priority}</p>
-              </li>
+                <p className="flex items-center gap-2 text-sm text-gray-500">
+                  <FaCalendarAlt className="text-blue-500" /> {normalizeDate(task.due_date)}
+                </p>
+                <p className="flex items-center gap-2 text-sm text-gray-500">
+                  <FaTag className="text-purple-500" /> {task.category}
+                </p>
+                <p className="flex items-center gap-2 text-sm text-gray-500">
+                  <FaBolt className="text-yellow-500" /> {task.priority}
+                </p>
+                <p className="flex items-center gap-2 text-sm text-gray-500">
+                  <FaCheckCircle
+                    className={task.status === "Completed" ? "text-green-500" : "text-gray-400"}
+                  />
+                  {task.status}
+                </p>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
 
       <AddTaskModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSave={handleAddTask}
+        onSave={(newTask) => {
+          addTask(newTask);
+          setIsModalOpen(false);
+        }}
       />
     </div>
-  )
-}
+  );
+};
 
-export default UpcomingPage
+export default UpcomingPage;

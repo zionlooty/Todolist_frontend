@@ -1,66 +1,56 @@
-import React, { useEffect, useState } from "react";
-import API from "../api/axios";
-import { toast } from "sonner";
+import React, { useContext, useEffect, useState } from "react";
+import { TaskContext } from "../context/TaskContext";
 import AddTaskModal from "../components/AddTaskModal";
 import EditTaskModal from "../components/EditTaskModal";
 import DeleteTaskModal from "../components/DeleteTaskModal";
 
 const TaskPage = () => {
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    tasks,
+    loading,
+    fetchTasks,
+    addTask,
+    updateTask,
+    deleteTask,
+  } = useContext(TaskContext);
+
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [deletingTask, setDeletingTask] = useState(null);
-
-  const fetchTasks = async () => {
-    try {
-      setLoading(true);
-      const res = await API.get("/task");
-      setTasks(res.data.tasks);
-    } catch {
-      toast.error("Failed to fetch tasks");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
     fetchTasks();
   }, []);
 
+  const handleAddTask = async (newTask) => {
+    await addTask(newTask);
+    setShowAddModal(false);
+  };
+
   const handleUpdateTask = async (updatedTask) => {
-    try {
-      await API.put(`/task/${updatedTask.task_id}`, updatedTask);
-      toast.success("Task updated successfully");
-      fetchTasks();
-    } catch {
-      toast.error("Failed to update task");
-    }
+    await updateTask(updatedTask);
+    setEditingTask(null);
   };
 
   const handleDeleteTask = async (taskId) => {
-    try {
-      await API.delete(`/task/${taskId}`);
-      toast.success("Task deleted successfully");
-      fetchTasks();
-      setDeletingTask(null);
-    } catch {
-      toast.error("Failed to delete task");
-    }
+    await deleteTask(taskId);
+    setDeletingTask(null);
   };
 
   return (
     <div className="p-6">
+     
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">My Tasks</h1>
         <button
           onClick={() => setShowAddModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
         >
           + Add Task
         </button>
       </div>
 
+     
       {loading ? (
         <p>Loading tasks...</p>
       ) : tasks.length === 0 ? (
@@ -88,13 +78,17 @@ const TaskPage = () => {
                   <td className="p-3 border capitalize">{task.priority}</td>
                   <td
                     className={`p-3 border ${
-                      task.status === "completed" ? "text-green-600" : "text-yellow-600"
+                      task.status === "completed"
+                        ? "text-green-600"
+                        : "text-yellow-600"
                     }`}
                   >
                     {task.status}
                   </td>
                   <td className="p-3 border">
-                    {task.due_date ? new Date(task.due_date).toLocaleDateString() : "—"}
+                    {task.due_date
+                      ? new Date(task.due_date).toLocaleDateString()
+                      : "—"}
                   </td>
                   <td className="p-3 border text-center space-x-2">
                     <button
@@ -122,7 +116,7 @@ const TaskPage = () => {
         <AddTaskModal
           isOpen
           onClose={() => setShowAddModal(false)}
-          onSave={fetchTasks}
+          onSave={handleAddTask}
         />
       )}
 

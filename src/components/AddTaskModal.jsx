@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import API from "../api/axios";
 import { toast } from "sonner";
 
 const AddTaskModal = ({ isOpen, onClose, onSave }) => {
@@ -11,52 +10,52 @@ const AddTaskModal = ({ isOpen, onClose, onSave }) => {
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
+  
+    if (!title.trim()) {
+      toast.error("Title is required");
+      return;
+    }
+    if (!due_date) {
+      toast.error("Due date is required");
+      return;
+    }
+  
     const newTask = {
-      title,
-      description,
+      title: title.trim(),
+      description: description.trim(),
       due_date,
       priority,
-      category,
+      category: category.trim() || "General",
       status: "pending",
     };
-
+    console.log("🧩 Task data before sending:", newTask);
+  
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-
-      const res = await API.post("/task", newTask, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (onSave) {
-        onSave(res.data); // ✅ only call if provided
-      }
-
-      toast.success("Task created successfully");
-      onClose();
-
-      // reset fields
+      await onSave?.(newTask); // single API call via context
+      // reset and close on success
       setTitle("");
       setDescription("");
       setDueDate("");
       setPriority("Medium");
       setCategory("General");
+      onClose();
     } catch (err) {
-      console.error("❌ Task creation error:", err.response?.data || err.message);
-      toast.error(err.response?.data?.message || "Failed to create task");
+     
+      console.error("❌ Task creation error (modal):", err);
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-semibold mb-4 text-gray-800">Add New Task</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Title */}
           <div>
             <label className="block text-sm font-medium mb-1">Title</label>
             <input
@@ -65,9 +64,10 @@ const AddTaskModal = ({ isOpen, onClose, onSave }) => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-              required
             />
           </div>
+
+          {/* Description */}
           <div>
             <label className="block text-sm font-medium mb-1">Description</label>
             <textarea
@@ -78,6 +78,8 @@ const AddTaskModal = ({ isOpen, onClose, onSave }) => {
               rows="3"
             />
           </div>
+
+          {/* Due Date & Priority */}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-sm font-medium mb-1">Due Date</label>
@@ -86,7 +88,6 @@ const AddTaskModal = ({ isOpen, onClose, onSave }) => {
                 value={due_date}
                 onChange={(e) => setDueDate(e.target.value)}
                 className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-                required
               />
             </div>
             <div>
@@ -102,6 +103,8 @@ const AddTaskModal = ({ isOpen, onClose, onSave }) => {
               </select>
             </div>
           </div>
+
+          {/* Category */}
           <div>
             <label className="block text-sm font-medium mb-1">Category</label>
             <input
@@ -112,6 +115,8 @@ const AddTaskModal = ({ isOpen, onClose, onSave }) => {
               className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
             />
           </div>
+
+          {/* Buttons */}
           <div className="flex justify-end gap-2">
             <button
               type="button"
