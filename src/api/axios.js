@@ -3,7 +3,7 @@ import axios from "axios";
 const API = axios.create({
   baseURL: "http://localhost:5000",
   headers: {
-    "Content-Type": "application/json", // ✅ ensure Express reads it as JSON
+    "Content-Type": "application/json", 
   },
 });
 
