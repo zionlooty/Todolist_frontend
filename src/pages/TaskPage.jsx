@@ -22,6 +22,30 @@ const TaskPage = () => {
     fetchTasks();
   }, []);
 
+  // Disable page scrolling on mobile while on the All Tasks page
+  useEffect(() => {
+    const applyScrollLock = () => {
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      const mainEl = document.querySelector('main');
+      if (isMobile) {
+        document.body.style.overflow = 'hidden';
+        if (mainEl) mainEl.style.overflowY = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+        if (mainEl) mainEl.style.overflowY = '';
+      }
+    };
+
+    applyScrollLock();
+    window.addEventListener('resize', applyScrollLock);
+    return () => {
+      window.removeEventListener('resize', applyScrollLock);
+      document.body.style.overflow = '';
+      const mainEl = document.querySelector('main');
+      if (mainEl) mainEl.style.overflowY = '';
+    };
+  }, []);
+
   const handleAddTask = async (newTask) => {
     await addTask(newTask);
     setShowAddModal(false);
