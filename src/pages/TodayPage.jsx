@@ -53,7 +53,11 @@ const TodayPage = () => {
                 </p>
                 <p className="flex items-center gap-2 text-sm text-gray-500">
                   <FaCheckCircle
-                    className={task.status === "Completed" ? "text-green-500" : "text-gray-400"}
+                    className={
+                      String(task.status).toLowerCase() === "completed"
+                        ? "text-green-500"
+                        : "text-gray-400"
+                    }
                   />
                   {task.status}
                 </p>
