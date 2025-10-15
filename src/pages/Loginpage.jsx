@@ -26,9 +26,28 @@ const Loginpage = () => {
         toast.error(" Login Failed: Incorrect email or password");
       }
     } catch (error) {
-      // Specifically check for 401 Unauthorized (wrong email/password)
-      if (error.response?.status === 401) {
+      const statusCode = error?.response?.status;
+      const serverMessageRaw =
+        error?.response?.data?.message ?? error?.response?.data?.error ?? "";
+      const serverMessage = String(serverMessageRaw).toLowerCase();
+
+      const isCredentialsIssue =
+        statusCode === 400 ||
+        statusCode === 401 ||
+        statusCode === 403 ||
+        statusCode === 404 ||
+        serverMessage.includes("invalid credentials") ||
+        serverMessage.includes("invalid email or password") ||
+        (serverMessage.includes("incorrect") &&
+          (serverMessage.includes("password") || serverMessage.includes("email"))) ||
+        serverMessage.includes("user not found");
+
+      if (isCredentialsIssue) {
         toast.error(" Incorrect email or password");
+      } else if (serverMessage) {
+        toast.error(serverMessageRaw);
+      } else if (!error?.response) {
+        toast.error(" Network error, please try again");
       } else {
         toast.error(" Something went wrong, please try again");
       }
