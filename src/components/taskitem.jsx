@@ -2,6 +2,26 @@ import React from 'react'
 import { FaCheckCircle, FaRegCircle } from 'react-icons/fa'
 
 const Taskitem = ({ title, status, dueDate, description }) => {
+    const formatDueDate = (input) => {
+        if (!input) return "—";
+        const inputString = String(input);
+        // If we get a plain YYYY-MM-DD, parse as local date to avoid timezone shifts
+        const dateOnlyMatch = inputString.match(/^\d{4}-\d{2}-\d{2}$/);
+        let date;
+        if (dateOnlyMatch) {
+            const [year, month, day] = inputString.split("-").map(Number);
+            date = new Date(year, month - 1, day);
+        } else {
+            date = new Date(inputString);
+        }
+        if (Number.isNaN(date.getTime())) return inputString;
+        return date.toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+        });
+    };
+
     return (
         <>
             <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
@@ -31,7 +51,7 @@ const Taskitem = ({ title, status, dueDate, description }) => {
                 )}
 
                
-                <p className="text-sm text-gray-500">📅 Due: {dueDate}</p>
+                <p className="text-sm text-gray-500">📅 Due: {formatDueDate(dueDate)}</p>
             </div>
         </>
     )
