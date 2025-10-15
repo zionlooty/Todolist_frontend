@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import StatCard from "../components/StatCard";
+import StatCard from "../components/statcard";
 import { FaCheckCircle, FaClock, FaRegCalendarAlt, FaTasks } from "react-icons/fa";
 import Taskitem from "../components/taskitem";
 
