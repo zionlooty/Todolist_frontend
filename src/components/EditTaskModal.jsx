@@ -23,7 +23,6 @@ const EditTaskModal = ({ isOpen, onClose, task, onSave }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Format date as YYYY-MM-DD for MySQL
     const formattedDate = dueDate ? new Date(dueDate).toISOString().split("T")[0] : null;
 
     const updatedTask = {

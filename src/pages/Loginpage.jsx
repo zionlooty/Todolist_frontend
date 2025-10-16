@@ -19,19 +19,28 @@ const Loginpage = () => {
 
       if (token) {
         localStorage.setItem("token", token);
-        toast.success(" Login Successful");
+        toast.success("Login successful");
         navigate("/");
       } else {
-        // No token returned
-        toast.error(" Login Failed: Incorrect email or password");
+        toast.error("Incorrect email or password");
       }
     } catch (error) {
-      // Specifically check for 401 Unauthorized (wrong email/password)
-      if (error.response?.status === 401) {
-        toast.error(" Incorrect email or password");
+      
+      const msg = error?.response?.data?.message?.toLowerCase() || "";
+
+      if (
+        msg.includes("invalid") ||
+        msg.includes("incorrect") ||
+        msg.includes("wrong") ||
+        msg.includes("not found")
+      ) {
+        toast.error("Incorrect email or password");
+      } else if (!error?.response) {
+        toast.error("Network error, please try again");
       } else {
-        toast.error(" Something went wrong, please try again");
+        toast.error("Something went wrong, please try again");
       }
+
       console.error("Login error:", error);
     } finally {
       setLoading(false);
@@ -41,7 +50,6 @@ const Loginpage = () => {
   return (
     <div className="h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white border border-gray-200 rounded-2xl p-8 w-full max-w-md shadow-lg">
-        {/* Header */}
         <div className="text-center mb-6">
           <div className="w-12 h-12 bg-blue-600 rounded-full mx-auto mb-3 flex items-center justify-center text-white font-bold text-lg">
             ✓
@@ -52,7 +60,6 @@ const Loginpage = () => {
           </p>
         </div>
 
-        {/* Form */}
         <form className="flex flex-col gap-4" onSubmit={handleLogin}>
           <input
             type="email"
@@ -80,7 +87,6 @@ const Loginpage = () => {
           </button>
         </form>
 
-        {/* OR Divider */}
         <div className="flex items-center my-6">
           <div className="flex-1 h-px bg-gray-300"></div>
           <span className="px-2 text-gray-500 text-sm">OR</span>
@@ -90,7 +96,7 @@ const Loginpage = () => {
         <p className="text-sm text-center text-gray-600 mt-4">
           Don't have an account?{" "}
           <Link to="/signup" className="text-blue-500">
-            signup
+            Signup
           </Link>
         </p>
       </div>

@@ -111,7 +111,7 @@ const TaskPage = () => {
         </div>
       )}
 
-      {/* Modals */}
+    
       {showAddModal && (
         <AddTaskModal
           isOpen

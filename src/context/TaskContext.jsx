@@ -24,7 +24,7 @@ export const TaskProvider = ({ children }) => {
       });
       setTasks(res.data.tasks || []);
     } catch (error) {
-      console.error("❌ Error fetching tasks:", error.response?.data || error);
+      console.error(" Error fetching tasks:", error.response?.data || error);
       if (token) toast.error("Failed to load tasks");
     } finally {
       setLoading(false);
@@ -46,7 +46,7 @@ export const TaskProvider = ({ children }) => {
         toast.error(res.data.message || "Failed to add task");
       }
     } catch (error) {
-      console.error("❌ Add task error:", error.response?.data || error);
+      console.error(" Add task error:", error.response?.data || error);
       toast.error(error.response?.data?.message || "Failed to add task");
     }
   };
@@ -61,7 +61,7 @@ export const TaskProvider = ({ children }) => {
       toast.success("Task updated successfully");
       fetchTasks();
     } catch (err) {
-      console.error("❌ Update task error:", err.response?.data || err);
+      console.error(" Update task error:", err.response?.data || err);
       toast.error(err.response?.data?.message || "Failed to update task");
     }
   };
@@ -76,7 +76,7 @@ export const TaskProvider = ({ children }) => {
       setTasks((prev) => prev.filter((t) => t.task_id !== task_id));
       toast.success("Task deleted successfully");
     } catch (err) {
-      console.error("❌ Delete task error:", err.response?.data || err);
+      console.error(" Delete task error:", err.response?.data || err);
       toast.error(err.response?.data?.message || "Failed to delete task");
     }
   };
