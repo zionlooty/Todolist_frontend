@@ -83,7 +83,10 @@ const TodayPage = () => {
                     <FaBolt className="text-yellow-500" />
                     {task.priority}
                   </p>
-                  <p className="flex items-center gap-2">
+                  <p
+                    className={`flex items-center gap-2 font-medium ${task.status === "Completed" ? "text-green-600" : "text-gray-500"
+                      }`}
+                  >
                     <FaCheckCircle
                       className={
                         task.status === "Completed"
@@ -93,6 +96,7 @@ const TodayPage = () => {
                     />
                     {task.status}
                   </p>
+
                 </div>
               </div>
             ))}

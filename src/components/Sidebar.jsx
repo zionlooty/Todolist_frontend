@@ -1,42 +1,39 @@
-import React from "react";
-import { FaHome, FaTasks, FaClock, FaRegCalendarAlt, FaCheckCircle } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import eact from 'react'
+import { FaCheckCircle, FaClock, FaHome, FaRegCalendarAlt, FaTasks } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
 
-const Sidebar = () => {
-  const linkClasses = ({ isActive }) =>
-    `flex items-center gap-3 px-4 py-2 rounded-md transition-all ${
-      isActive
-        ? "bg-gray-900 text-white"
-        : "text-gray-300 hover:bg-gray-800 hover:text-white"
-    }`;
+const Sidebar = ({ onNavigate }) => {
+    return (
+        <>
+            <aside className="w-64 bg-gray-900 text-white flex flex-col h-full">
+                <div className="p-4 text-2xl font-bold border-b border-gray-700">
+                    ToDoList
+                </div>
 
-  return (
-    <aside className="w-64 bg-gray-900 text-white flex flex-col h-full fixed md:relative z-30">
-      <div className="p-4 text-2xl font-bold border-b border-gray-700">ToDoList</div>
+                <nav className="flex-1 p-4 space-y-2">
+                    <Link to="/" onClick={onNavigate} className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700">
+                        <FaHome /> Dashboard
+                    </Link>
 
-      <nav className="flex-1 p-4 space-y-2">
-        <NavLink to="/" className={linkClasses}>
-          <FaHome /> Dashboard
-        </NavLink>
+                    <Link to="/tasks" onClick={onNavigate} className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700">
+                        <FaTasks /> All Tasks
+                    </Link>
 
-        <NavLink to="/tasks" className={linkClasses}>
-          <FaTasks /> All Tasks
-        </NavLink>
+                    <Link to="/today" onClick={onNavigate} className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700">
+                        <FaClock /> Today
+                    </Link>
 
-        <NavLink to="/today" className={linkClasses}>
-          <FaClock /> Today
-        </NavLink>
+                    <Link to="/upcoming" onClick={onNavigate} className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700">
+                        <FaRegCalendarAlt /> Upcoming
+                    </Link>
 
-        <NavLink to="/upcoming" className={linkClasses}>
-          <FaRegCalendarAlt /> Upcoming
-        </NavLink>
+                    <Link to="/completed" onClick={onNavigate} className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700">
+                        <FaCheckCircle /> Completed
+                    </Link>
+                </nav>
+            </aside>
+        </>
+    )
+}
 
-        <NavLink to="/completed" className={linkClasses}>
-          <FaCheckCircle /> Completed
-        </NavLink>
-      </nav>
-    </aside>
-  );
-};
-
-export default Sidebar;
+export default Sidebar

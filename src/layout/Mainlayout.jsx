@@ -1,48 +1,52 @@
-import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
-import Topbar from "../components/topbar";
-import { FaBars } from "react-icons/fa";
+import React, { useState, useCallback } from 'react'
+import { Outlet } from 'react-router-dom'
+import Sidebar from '../components/Sidebar'
+import Topbar from '../components/topbar'
+import { FaBars } from 'react-icons/fa'
 
 const Mainlayout = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const closeSidebar = useCallback(() => setIsSidebarOpen(false), [])
 
   return (
-    <div className="flex h-screen bg-gray-100 overflow-hidden">
-      {/* Sidebar */}
+    <div className='flex h-screen bg-gray-100 overflow-hidden'>
+      {/* Sidebar container for mobile slide-in */}
       <div
         className={`fixed md:relative z-30 inset-y-0 left-0 w-64 transform transition-transform duration-300 bg-gray-900 
-        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
       >
-        <Sidebar />
+        <Sidebar onNavigate={closeSidebar} />
       </div>
 
-      {/* Overlay on mobile */}
+      {/* Overlay on mobile to block background and allow close */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-40 z-20 md:hidden"
-          onClick={() => setIsSidebarOpen(false)}
+          className='fixed inset-0 bg-black bg-opacity-40 z-20 md:hidden'
+          onClick={closeSidebar}
         />
       )}
 
       {/* Main content */}
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        <div className="flex items-center justify-between p-4 bg-white shadow-sm">
+      <div className='flex flex-col flex-1 min-w-0 overflow-hidden'>
+        <div className='flex items-center justify-between p-4 bg-white shadow-sm'>
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="md:hidden text-gray-700 text-2xl"
+            className='md:hidden text-gray-700 text-2xl'
+            aria-label='Toggle sidebar'
+            aria-expanded={isSidebarOpen}
+            aria-controls='app-sidebar'
           >
             <FaBars />
           </button>
           <Topbar />
         </div>
 
-        <main className="flex-1 p-6 bg-gray-50 overflow-y-auto">
+        <main className='flex-1 p-6 bg-gray-50 overflow-y-auto'>
           <Outlet />
         </main>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Mainlayout;
+export default Mainlayout
