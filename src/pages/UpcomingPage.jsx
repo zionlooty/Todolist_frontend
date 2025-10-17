@@ -51,7 +51,7 @@ const UpcomingPage = () => {
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {upcomingTasks.map((task) => (
+            {upcomingTasks.filter(Boolean).map((task) => (
               <div
                 key={task.task_id}
                 className="bg-white border border-gray-100 p-6 rounded-2xl shadow-sm hover:shadow-md hover:border-blue-100 transition-all duration-200"

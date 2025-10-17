@@ -70,7 +70,7 @@ const TaskPage = () => {
               </tr>
             </thead>
             <tbody>
-              {tasks.map((task, i) => (
+              {(tasks || []).filter(Boolean).map((task, i) => (
                 <tr key={task.task_id} className="hover:bg-gray-50">
                   <td className="p-3 border">{i + 1}</td>
                   <td className="p-3 border font-medium">{task.title}</td>

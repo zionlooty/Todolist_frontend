@@ -40,10 +40,16 @@ export const TaskProvider = ({ children }) => {
   
       if (res.data.message === "Task created successfully") {
         toast.success("Task added successfully");
-  
-        // 🟢 Add the new task at the top instead of bottom
-        const createdTask = res.data.task;
-        setTasks((prev) => [createdTask, ...prev]);
+        // Ensure we have a valid task object from the API response
+        const createdTask = res?.data?.task || res?.data?.data?.task;
+
+        if (createdTask && typeof createdTask === "object") {
+          // 🟢 Add the new task at the top; guard against any undefined items
+          setTasks((prev) => [createdTask, ...(prev || []).filter(Boolean)]);
+        } else {
+          // Fallback: refetch to avoid inserting undefined and crashing render
+          await fetchTasks();
+        }
       } else {
         toast.error(res.data.message || "Failed to add task");
       }

@@ -88,7 +88,7 @@ const Dashboard = () => {
         <p className="text-gray-500 text-sm">No recent tasks found.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {recentTasks.map((task) => (
+          {recentTasks.filter(Boolean).map((task) => (
             <Taskitem
               key={task.task_id}
               title={task.title}
