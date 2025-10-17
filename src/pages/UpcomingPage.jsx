@@ -7,14 +7,30 @@ const UpcomingPage = () => {
   const { tasks, addTask, loading } = useContext(TaskContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const today = new Date().toISOString().split("T")[0];
+  // Compute local start of today to avoid timezone issues
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
 
-  const normalizeDate = (dateString) =>
-    dateString ? (dateString.includes("T") ? dateString.split("T")[0] : dateString) : null;
+  const isUpcoming = (input) => {
+    if (!input) return false;
+    const inputString = String(input);
+    let date;
+    // Parse YYYY-MM-DD as local date to avoid UTC shift
+    const dateOnlyMatch = inputString.match(/^\d{4}-\d{2}-\d{2}$/);
+    if (dateOnlyMatch) {
+      const [year, month, day] = inputString.split("-").map(Number);
+      date = new Date(year, month - 1, day);
+    } else {
+      date = new Date(inputString);
+    }
+    if (Number.isNaN(date.getTime())) return false;
+    date.setHours(0, 0, 0, 0);
+    return date.getTime() > startOfToday.getTime();
+  };
 
   const upcomingTasks = useMemo(
-    () => tasks.filter((task) => normalizeDate(task.due_date) > today),
-    [tasks, today]
+    () => tasks.filter((task) => isUpcoming(task.due_date)),
+    [tasks]
   );
 
   return (
