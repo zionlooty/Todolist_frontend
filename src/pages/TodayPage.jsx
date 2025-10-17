@@ -7,7 +7,7 @@ const TodayPage = () => {
   const { tasks, addTask, loading } = useContext(TaskContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Get today's date normalized
+  
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const todayDate = today.toISOString().split("T")[0];
