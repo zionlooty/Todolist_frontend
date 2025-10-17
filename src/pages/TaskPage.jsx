@@ -69,44 +69,55 @@ const TaskPage = () => {
                 <th className="p-3 border text-center">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              {tasks.map((task, i) => (
-                <tr key={task.task_id} className="hover:bg-gray-50">
-                  <td className="p-3 border">{i + 1}</td>
-                  <td className="p-3 border font-medium">{task.title}</td>
-                  <td className="p-3 border">{task.description}</td>
-                  <td className="p-3 border capitalize">{task.priority}</td>
-                  <td
-                    className={`p-3 border ${
-                      task.status === "completed"
-                        ? "text-green-600"
-                        : "text-yellow-600"
-                    }`}
-                  >
-                    {task.status}
-                  </td>
-                  <td className="p-3 border">
-                    {task.due_date
-                      ? new Date(task.due_date).toLocaleDateString()
-                      : "—"}
-                  </td>
-                  <td className="p-3 border text-center space-x-2">
-                    <button
-                      onClick={() => setEditingTask(task)}
-                      className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => setDeletingTask(task)}
-                      className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+           <tbody>
+  {Array.isArray(tasks) && tasks.length > 0 ? (
+    tasks
+      .filter((task) => task && typeof task === "object" && task.title) // ✅ skip undefined
+      .map((task, i) => (
+        <tr key={task.task_id || i} className="hover:bg-gray-50">
+          <td className="p-3 border">{i + 1}</td>
+          <td className="p-3 border font-medium">{task.title}</td>
+          <td className="p-3 border">{task.description}</td>
+          <td className="p-3 border capitalize">{task.priority}</td>
+          <td
+            className={`p-3 border ${
+              task.status === "completed"
+                ? "text-green-600"
+                : "text-yellow-600"
+            }`}
+          >
+            {task.status}
+          </td>
+          <td className="p-3 border">
+            {task.due_date
+              ? new Date(task.due_date).toLocaleDateString()
+              : "—"}
+          </td>
+          <td className="p-3 border text-center space-x-2">
+            <button
+              onClick={() => setEditingTask(task)}
+              className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => setDeletingTask(task)}
+              className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      ))
+  ) : (
+    <tr>
+      <td colSpan="7" className="text-center p-3">
+        No tasks found.
+      </td>
+    </tr>
+  )}
+</tbody>
+
           </table>
         </div>
       )}
