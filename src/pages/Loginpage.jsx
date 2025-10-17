@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import { toast } from "sonner";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // 👈 Import eye icons
 
 const Loginpage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // 👈 Track visibility
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -25,7 +27,6 @@ const Loginpage = () => {
         toast.error("Incorrect email or password");
       }
     } catch (error) {
-      
       const msg = error?.response?.data?.message?.toLowerCase() || "";
 
       if (
@@ -50,6 +51,7 @@ const Loginpage = () => {
   return (
     <div className="h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white border border-gray-200 rounded-2xl p-8 w-full max-w-md shadow-lg">
+        {/* HEADER */}
         <div className="text-center mb-6">
           <div className="w-12 h-12 bg-blue-600 rounded-full mx-auto mb-3 flex items-center justify-center text-white font-bold text-lg">
             ✓
@@ -60,6 +62,7 @@ const Loginpage = () => {
           </p>
         </div>
 
+        {/* FORM */}
         <form className="flex flex-col gap-4" onSubmit={handleLogin}>
           <input
             type="email"
@@ -69,15 +72,26 @@ const Loginpage = () => {
             className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
-          <input
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
 
+         
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+              required
+            />
+
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500 hover:text-blue-600"
+            >
+              {showPassword ? <FaEye/> : < FaEyeSlash/>}
+            </span>
+          </div>
+           
           <button
             type="submit"
             disabled={loading}
@@ -87,12 +101,14 @@ const Loginpage = () => {
           </button>
         </form>
 
+        {/* DIVIDER */}
         <div className="flex items-center my-6">
           <div className="flex-1 h-px bg-gray-300"></div>
           <span className="px-2 text-gray-500 text-sm">OR</span>
           <div className="flex-1 h-px bg-gray-300"></div>
         </div>
 
+        {/* SIGNUP LINK */}
         <p className="text-sm text-center text-gray-600 mt-4">
           Don't have an account?{" "}
           <Link to="/signup" className="text-blue-500">
