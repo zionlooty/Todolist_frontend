@@ -31,28 +31,31 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+ 
   const addTask = async (newTask) => {
     try {
       const token = localStorage.getItem("token");
       const res = await API.post("/task", newTask, {
         headers: { Authorization: `Bearer ${token}` },
       });
-  
+
       if (res.data.message === "Task created successfully") {
         toast.success("Task added successfully");
-  
-        // 🟢 Add the new task at the top instead of bottom
-        const createdTask = res.data.task;
-        setTasks((prev) => [createdTask, ...prev]);
+      
+        // Add new task instantly to top of list
+        setTasks((prevTasks) => [res.data.task, ...prevTasks]);
+      
+        // Optionally refresh backend in background
+        fetchTasks();
       } else {
         toast.error(res.data.message || "Failed to add task");
       }
+      
     } catch (error) {
-      console.error("Add task error:", error.response?.data || error);
+      console.error(" Add task error:", error.response?.data || error);
       toast.error(error.response?.data?.message || "Failed to add task");
     }
   };
-  
 
 
   const updateTask = async (updatedTask) => {
