@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { toast  } from "sonner";
+import { toast } from "sonner";
+import API from "../api/axios"; // ✅ import your Axios instance
 
 const Signuppage = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-   const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -16,8 +17,7 @@ const Signuppage = () => {
     e.preventDefault();
     setLoading(true);
 
-    
-    if (!fullName|| !email || !password) {
+    if (!fullName || !email || !password) {
       toast.error("All fields are required!");
       setLoading(false);
       return;
@@ -30,36 +30,27 @@ const Signuppage = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/new/user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          full_name: fullName.trim(), 
-          email: email.trim(),
-          password,
-        }),
+      // ✅ use centralized API
+      const res = await API.post("/new/user", {
+        full_name: fullName.trim(),
+        email: email.trim(),
+        password,
       });
 
-      const data = await res.json();
-
-      if (res.ok) {
-        toast.success("Signup successful! Redirecting to login...");
-        setTimeout(() => navigate("/login"), 1500);
-      } else {
-        toast.error(data.message || "Signup failed");
-      }
+      toast.success("Signup successful! Redirecting to login...");
+      setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
-      console.error("Unexpected error:", err);
-      toast.error("Something went wrong. Try again.");
+      console.error("Error:", err);
+      const errorMsg = err.response?.data?.message || "Signup failed. Try again.";
+      toast.error(errorMsg);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
     <div className="h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white border border-gray-200 rounded-2xl p-8 w-full max-w-md shadow-lg">
-      
         <div className="text-center mb-6">
           <div className="w-12 h-12 bg-blue-600 rounded-full mx-auto mb-3 flex items-center justify-center text-white font-bold text-lg">
             ✓
@@ -68,7 +59,6 @@ const Signuppage = () => {
           <p className="text-gray-500 text-sm">Start organizing tasks today</p>
         </div>
 
-      
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <input
             type="text"
@@ -84,24 +74,23 @@ const Signuppage = () => {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-         
-                   <div className="relative">
-                     <input
-                       type={showPassword ? "text" : "password"}
-                       placeholder="Enter your password"
-                       value={password}
-                       onChange={(e) => setPassword(e.target.value)}
-                       className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
-                       required
-                     />
-         
-                     <span
-                       onClick={() => setShowPassword(!showPassword)}
-                       className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500 hover:text-blue-600"
-                     >
-                       {showPassword ? <FaEyeSlash/> : <FaEye/>}
-                     </span>
-                   </div>
+
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+              required
+            />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500 hover:text-blue-600"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
 
           <button
             type="submit"
@@ -114,14 +103,12 @@ const Signuppage = () => {
           </button>
         </form>
 
-       
         <div className="flex items-center my-6">
           <div className="flex-1 h-px bg-gray-300"></div>
           <span className="px-2 text-gray-500 text-sm">OR</span>
           <div className="flex-1 h-px bg-gray-300"></div>
         </div>
 
-      
         <p className="text-center text-gray-500 text-sm mt-6">
           Already have an account?{" "}
           <a href="/login" className="text-blue-600 hover:underline">

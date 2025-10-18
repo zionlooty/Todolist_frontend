@@ -12,14 +12,19 @@ const UpcomingPage = () => {
   const normalizeDate = (dateString) =>
     dateString ? (dateString.includes("T") ? dateString.split("T")[0] : dateString) : null;
   const upcomingTasks = useMemo(() => {
-    const now = new Date();
-    return tasks.filter((task) => {
-      if (!task.due_date) return false;
-      const taskDate = new Date(task.due_date);
-      // ✅ include today and future
-      return taskDate >= now.setHours(0, 0, 0, 0);
-    });
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // normalize to start of today
+  
+    return tasks
+      .filter((task) => {
+        if (!task.due_date) return false;
+        const taskDate = new Date(task.due_date);
+        taskDate.setHours(0, 0, 0, 0); // normalize task date
+        return taskDate > today; // only future tasks
+      })
+      .sort((a, b) => new Date(a.due_date) - new Date(b.due_date)); // ascending order
   }, [tasks]);
+  
   
 
   return (

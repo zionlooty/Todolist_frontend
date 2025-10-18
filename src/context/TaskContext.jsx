@@ -51,7 +51,8 @@ export const TaskProvider = ({ children }) => {
         // ✅ SAFETY FIX:
         if (createdTask && typeof createdTask === "object") {
           // Add the new task at the top immediately
-          setTasks((prev) => [createdTask, ...prev]);
+          setTasks((prev) => [...prev, newTask]);
+          ;
         } else {
           // If backend didn’t return the full task, reload tasks safely
           console.warn("⚠️ No task returned from backend, refetching...");
