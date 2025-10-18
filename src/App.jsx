@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import Loginpage from "./pages/Loginpage"
-import Signuppage from "./pages/Signuppage"
+import SignupPage from "./pages/SignupPage"
 import Dashboard from "./pages/Dashboard"
 import Mainlayout from "./layout/Mainlayout"
 import TaskPage from "./pages/TaskPage"
@@ -38,7 +38,7 @@ function App() {
             path="/signup"
             element={
               <LoginAuth>
-                <Signuppage />
+                <SignupPage />
               </LoginAuth>
             }
           />
