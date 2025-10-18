@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../api/axios";
 import { toast  } from "sonner";
 
 const Signuppage = () => {
@@ -28,23 +29,17 @@ const Signuppage = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/new/user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          full_name: fullName.trim(), 
-          email: email.trim(),
-          password,
-        }),
+      const { data } = await API.post("/new/user", {
+        full_name: fullName.trim(),
+        email: email.trim(),
+        password,
       });
 
-      const data = await res.json();
-
-      if (res.ok) {
+      if (data && (data.success || data.message)) {
         toast.success("Signup successful! Redirecting to login...");
         setTimeout(() => navigate("/login"), 1500);
       } else {
-        toast.error(data.message || "Signup failed");
+        toast.error((data && data.message) || "Signup failed");
       }
     } catch (err) {
       console.error("Unexpected error:", err);

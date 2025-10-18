@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../api/axios";
 import StatCard from "../components/statcard";
 import {
   FaCheckCircle,
@@ -17,7 +17,7 @@ const Dashboard = () => {
     const fetchTasks = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/task", {
+        const res = await API.get("/task", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
