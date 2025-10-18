@@ -4,7 +4,7 @@ import API from "../api/axios";
 import { toast } from "sonner";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; 
 
-const Loginpage = () => {
+const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); 
@@ -120,4 +120,4 @@ const Loginpage = () => {
   );
 };
 
-export default Loginpage;
+export default LoginPage;

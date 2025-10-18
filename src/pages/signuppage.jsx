@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import API from "../api/axios"; // ✅ import your Axios instance
 
-const Signuppage = () => {
+const SignupPage = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -120,4 +120,4 @@ const Signuppage = () => {
   );
 };
 
-export default Signuppage;
+export default SignupPage;

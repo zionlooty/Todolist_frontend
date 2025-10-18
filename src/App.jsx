@@ -1,12 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-import Loginpage from "./pages/Loginpage"
 import Dashboard from "./pages/Dashboard"
 import Mainlayout from "./layout/Mainlayout"
 import TaskPage from "./pages/TaskPage"
 import TodayPage from "./pages/TodayPage"
 import UpcomingPage from "./pages/UpcomingPage"
 import { TaskProvider } from "./context/TaskContext"
-import Signuppage from "./pages/signuppage"
+import LoginPage from "./pages/Loginpage"
+import SignupPage from "./pages/signuppage"
+
 
 
 const ProtectedRoute = ({ children }) => {
@@ -30,7 +31,7 @@ function App() {
             path="/login"
             element={
               <LoginAuth>
-                <Loginpage/>
+                <LoginPage/>
               </LoginAuth>
             }
           />
@@ -38,7 +39,7 @@ function App() {
             path="/signup"
             element={
               <LoginAuth>
-                <Signuppage/>
+                <SignupPage/>
               </LoginAuth>
             }
           />
