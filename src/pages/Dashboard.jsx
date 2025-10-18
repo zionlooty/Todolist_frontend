@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../api/axios";
 import StatCard from "../components/statcard";
 import {
   FaCheckCircle,
@@ -17,7 +17,7 @@ const Dashboard = () => {
     const fetchTasks = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/task", {
+        const res = await API.get("/task", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -88,7 +88,7 @@ const Dashboard = () => {
         <p className="text-gray-500 text-sm">No recent tasks found.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {recentTasks.map((task) => (
+          {recentTasks.filter(Boolean).map((task) => (
             <Taskitem
               key={task.task_id}
               title={task.title}
