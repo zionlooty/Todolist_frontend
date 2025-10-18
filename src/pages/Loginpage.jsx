@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import { toast } from "sonner";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // 👈 Import eye icons
+import { FaEye, FaEyeSlash } from "react-icons/fa"; 
 
 const Loginpage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // 👈 Track visibility
+  const [showPassword, setShowPassword] = useState(false); 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -88,7 +88,7 @@ const Loginpage = () => {
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500 hover:text-blue-600"
             >
-              {showPassword ? <FaEye/> : < FaEyeSlash/>}
+              {showPassword ? <FaEyeSlash/> : <FaEye/>}
             </span>
           </div>
            

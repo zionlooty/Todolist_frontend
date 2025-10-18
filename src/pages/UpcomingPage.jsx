@@ -11,11 +11,16 @@ const UpcomingPage = () => {
 
   const normalizeDate = (dateString) =>
     dateString ? (dateString.includes("T") ? dateString.split("T")[0] : dateString) : null;
-
-  const upcomingTasks = useMemo(
-    () => tasks.filter((task) => normalizeDate(task.due_date) > today),
-    [tasks, today]
-  );
+  const upcomingTasks = useMemo(() => {
+    const now = new Date();
+    return tasks.filter((task) => {
+      if (!task.due_date) return false;
+      const taskDate = new Date(task.due_date);
+      // ✅ include today and future
+      return taskDate >= now.setHours(0, 0, 0, 0);
+    });
+  }, [tasks]);
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-6">

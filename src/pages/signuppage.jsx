@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { toast  } from "sonner";
 
@@ -6,6 +7,7 @@ const Signuppage = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+   const [showPassword, setShowPassword] = useState(false); 
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -82,13 +84,24 @@ const Signuppage = () => {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <input
-            type="password"
-            placeholder="Create a password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+         
+                   <div className="relative">
+                     <input
+                       type={showPassword ? "text" : "password"}
+                       placeholder="Enter your password"
+                       value={password}
+                       onChange={(e) => setPassword(e.target.value)}
+                       className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+                       required
+                     />
+         
+                     <span
+                       onClick={() => setShowPassword(!showPassword)}
+                       className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500 hover:text-blue-600"
+                     >
+                       {showPassword ? <FaEyeSlash/> : <FaEye/>}
+                     </span>
+                   </div>
 
           <button
             type="submit"
