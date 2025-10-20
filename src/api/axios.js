@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://todolist-backendd.vercel.app", // ✅ updated URL
+  baseURL: "https://todolist-backendd.vercel.app",
   headers: {
     "Content-Type": "application/json",
   },
