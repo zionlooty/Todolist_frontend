@@ -1,11 +1,11 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://todolist-backendd.vercel.app",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: { "Content-Type": "application/json" },
 });
+
+console.log("🔍 API Base URL:", import.meta.env.VITE_API_URL);
 
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
