@@ -2,19 +2,18 @@ import React, { useContext, useState, useMemo } from "react";
 import { TaskContext } from "../context/TaskContext";
 import AddTaskModal from "../components/AddTaskModal";
 import { FaPlus, FaCalendarAlt, FaTag, FaBolt, FaCheckCircle } from "react-icons/fa";
-import { getTodayLocal, parseLocalDate } from "../../utils/dateUtils";
-
+import { getTodayLocal, parseLocalDate, formatLocalDate } from "../../utils/dateUtils";
 
 const UpcomingPage = () => {
   const { tasks, addTask, loading } = useContext(TaskContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const upcomingTasks = useMemo(() => {
-    const today = getTodayLocal();
+    const today = getTodayLocal().getTime(); // local midnight in ms
     return tasks
       .filter((t) => {
         const d = parseLocalDate(t.due_date);
-        return d && d > today;
+        return d && d.getTime() > today; // reliable comparison
       })
       .sort((a, b) => parseLocalDate(a.due_date) - parseLocalDate(b.due_date));
   }, [tasks]);
@@ -54,10 +53,14 @@ const UpcomingPage = () => {
                 <p className="text-sm text-gray-600 mb-3 line-clamp-2">{t.description}</p>
 
                 <div className="space-y-2 text-sm text-gray-500">
-                  <p className="flex items-center gap-2"><FaCalendarAlt className="text-blue-500" /> {formatLocalDate(parseLocalDate(t.due_date))}</p>
+                  <p className="flex items-center gap-2">
+                    <FaCalendarAlt className="text-blue-500" /> {formatLocalDate(parseLocalDate(t.due_date))}
+                  </p>
                   <p className="flex items-center gap-2"><FaTag className="text-purple-500" /> {t.category}</p>
                   <p className="flex items-center gap-2"><FaBolt className="text-yellow-500" /> {t.priority}</p>
-                  <p className="flex items-center gap-2"><FaCheckCircle className={t.status === "Completed" ? "text-green-500" : "text-gray-400"} /> {t.status}</p>
+                  <p className="flex items-center gap-2">
+                    <FaCheckCircle className={t.status.toLowerCase() === "completed" ? "text-green-500" : "text-gray-400"} /> {t.status}
+                  </p>
                 </div>
               </div>
             ))}

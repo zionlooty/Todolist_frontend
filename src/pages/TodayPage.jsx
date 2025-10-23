@@ -8,17 +8,16 @@ const TodayPage = () => {
   const { tasks, addTask, loading } = useContext(TaskContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // ✅ Filter tasks that are due today (safe across timezones)
   const todayTasks = useMemo(() => {
-    const today = getTodayLocal().getTime(); // numeric timestamp
+    const today = getTodayLocal();
     return tasks.filter((t) => {
-      const taskDate = parseLocalDate(t.due_date);
-      return taskDate && taskDate.getTime() === today;
+      const dueDate = parseLocalDate(t.due_date);
+      return dueDate && dueDate.getTime() === today.getTime();
     });
   }, [tasks]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10">
@@ -50,16 +49,11 @@ const TodayPage = () => {
               >
                 <h3 className="font-semibold text-lg text-gray-800 mb-1">{t.title}</h3>
                 <p className="text-sm text-gray-600 mb-3 line-clamp-2">{t.description}</p>
-
                 <div className="space-y-2 text-sm text-gray-500">
-                  <p className="flex items-center gap-2">
-                    <FaCalendarAlt className="text-blue-500" /> {formatLocalDate(parseLocalDate(t.due_date))}
-                  </p>
+                  <p className="flex items-center gap-2"><FaCalendarAlt className="text-blue-500" /> {formatLocalDate(parseLocalDate(t.due_date))}</p>
                   <p className="flex items-center gap-2"><FaTag className="text-purple-500" /> {t.category}</p>
                   <p className="flex items-center gap-2"><FaBolt className="text-yellow-500" /> {t.priority}</p>
-                  <p className="flex items-center gap-2">
-                    <FaCheckCircle className={t.status.toLowerCase() === "completed" ? "text-green-500" : "text-gray-400"} /> {t.status}
-                  </p>
+                  <p className="flex items-center gap-2"><FaCheckCircle className={t.status.toLowerCase() === "completed" ? "text-green-500" : "text-gray-400"} /> {t.status}</p>
                 </div>
               </div>
             ))}

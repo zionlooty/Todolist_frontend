@@ -1,21 +1,27 @@
-// utils/dateUtils.js
+// Safely parse any date string into a local Date (handles YYYY-MM-DD and ISO)
 export const parseLocalDate = (dateStr) => {
   if (!dateStr) return null;
+
+  if (dateStr.includes("T")) {
+    // ISO datetime string
+    const d = new Date(dateStr);
+    d.setHours(0, 0, 0, 0); // local midnight
+    return d;
+  }
+
+  // YYYY-MM-DD string
   const [year, month, day] = dateStr.split("-").map(Number);
   return new Date(year, month - 1, day); // local midnight
 };
 
-// ✅ Get today's local midnight (Nigerian time)
+// Get today's local date (midnight)
 export const getTodayLocal = () => {
-  const now = new Date();
-  // shift to UTC+1 (Nigeria)
-  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-  const nigeriaOffset = 1 * 60 * 60000; // +1 hour
-  const nigeriaTime = new Date(utc + nigeriaOffset);
-  nigeriaTime.setHours(0, 0, 0, 0);
-  return nigeriaTime;
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d;
 };
 
+// Format local date as YYYY-MM-DD
 export const formatLocalDate = (date) => {
   if (!date) return "";
   const year = date.getFullYear();
