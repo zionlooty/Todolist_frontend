@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import { toast } from "sonner";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; 
+import { FaEye, FaEyeSlash, FaEnvelope } from "react-icons/fa";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -64,38 +64,46 @@ const LoginPage = () => {
 
         {/* FORM */}
         <form className="flex flex-col gap-4" onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
+          {/* ✅ Email input with icon */}
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+              <FaEnvelope />
+            </span>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full pl-10 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
 
-         
+          {/* ✅ Password input with toggle */}
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+              className="w-full p-3 pr-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
-
             <span
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500 hover:text-blue-600"
             >
-              {showPassword ? <FaEyeSlash/> : <FaEye/>}
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
-           
+
+          {/* ✅ Submit button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full text-white bg-blue-600 hover:bg-blue-800 cursor-pointer py-2 rounded-md"
+            className={`w-full text-white bg-blue-600 hover:bg-blue-700 transition py-3 rounded-lg font-semibold ${
+              loading ? "opacity-70 cursor-not-allowed" : "cursor-pointer"
+            }`}
           >
             {loading ? "Logging in..." : "Log in"}
           </button>
@@ -111,8 +119,8 @@ const LoginPage = () => {
         {/* SIGNUP LINK */}
         <p className="text-sm text-center text-gray-600 mt-4">
           Don't have an account?{" "}
-          <Link to="/signup" className="text-blue-500">
-            Signup
+          <Link to="/signup" className="text-blue-600 hover:underline">
+            Sign up
           </Link>
         </p>
       </div>
