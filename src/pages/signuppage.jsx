@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaEye, FaEyeSlash, FaEnvelope, FaUser } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaEnvelope, FaUser, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import API from "../api/axios"; // ✅ import your Axios instance
@@ -90,22 +90,23 @@ const SignupPage = () => {
 
           {/* ✅ Password Input with Eye Icon */}
           <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10 pl-3"
-              required
-            />
-            <span
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500 hover:text-blue-600"
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
-          </div>
-
+                   <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                   <input
+                     type={showPassword ? "text" : "password"}
+                     placeholder="Enter your password"
+                     value={password}
+                     onChange={(e) => setPassword(e.target.value)}
+                     className="w-full pl-10 pr-10 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                     required
+                   />
+                   <span
+                     onClick={() => setShowPassword(!showPassword)}
+                     className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500 hover:text-blue-600"
+                   >
+                     {showPassword ? <FaEyeSlash /> : <FaEye />}
+                   </span>
+                 </div>
+       
           <button
             type="submit"
             className={`bg-blue-600 hover:bg-blue-700 transition cursor-pointer text-white rounded-lg p-3 font-semibold ${
